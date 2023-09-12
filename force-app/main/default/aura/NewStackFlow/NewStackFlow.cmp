@@ -1,0 +1,63 @@
+<aura:component implements="lightning:actionOverride,lightning:hasPageReference" controller="NewStackController">
+    
+    <aura:handler name="init" value="{!this}" action="{!c.init}" />
+    <aura:attribute name="recordTypeId" type="String" />
+    <aura:attribute name="fieldNames" type="String[]" />
+    
+    <div class="container slds-brand-band slds-brand-band_cover slds-brand-band_medium">
+        <lightning:listView
+        	aura:id="listViewStacks"
+            objectApiName="Stack__c"
+            listName="All"
+            showSearchBar="true"
+            showActionBar="true"
+            enableInlineEdit="true"
+            showRowLevelActions="false"
+        />
+        <div class="slds-m-around--xx-large">
+            <!--Modal Box Start-->
+            <div role="dialog" class="slds-modal slds-fade-in-open ">
+                <div class="slds-modal__container">
+                    <div class="slds-modal__header">
+                        <button class="slds-button slds-modal__close slds-button--icon-inverse" title="Close" onclick="{!c.handleCloseModal}">
+                            <lightning:buttonIcon iconName="utility:close" variant="bare-inverse" size="large" alternativeText="Close"/>
+                        </button>
+                        <lightning:formattedText aura:id="header" name="header" class="slds-text-heading--medium" />
+                    </div>
+                    <!--Main Content Start-->
+                    <div class="slds-modal__content slds-p-around--medium">
+                        <!--<lightning:flow aura:id="flowData" />-->
+                        <lightning:recordForm
+                        	objectApiName="Stack__c"
+                            recordTypeId="{!v.recordTypeId}"
+                            columns="2"
+                            fields="{!v.fieldNames}"
+                            mode="edit"
+                            oncancel="{!c.handleCloseModal}"/>
+                    </div>
+                    <!--Main Content End-->
+                    <!--
+                    <div class="slds-modal__footer">
+                        <button class="slds-button slds-button-*REMOVEME*-brand" onclick="{!c.handleCloseModal}">Cancel</button>
+                    </div>
+					-->
+                </div>
+            </div>
+            <div class="slds-backdrop slds-backdrop--open"></div>
+        </div>
+    </div>
+    <!--  this tag sets modal width -->
+    <aura:html tag="style">
+        .slds-modal__container {
+        	min-width: 38%;
+        }
+        
+        .slds-template_default {
+        	padding: 0rem;
+        }
+        
+        .container {
+        	padding: 1rem;
+        }
+    </aura:html>
+</aura:component>
