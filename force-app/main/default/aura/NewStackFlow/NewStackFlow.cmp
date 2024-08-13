@@ -3,8 +3,12 @@
     <aura:handler name="init" value="{!this}" action="{!c.init}" />
     <aura:attribute name="recordTypeId" type="String" />
     <aura:attribute name="fieldNames" type="String[]" />
+    <aura:attribute name="fieldSet" type="List" access="private"/>
+    <aura:attribute name="sections" type="List" access="private"/>
     
-    <div class="container slds-brand-band slds-brand-band_cover slds-brand-band_medium">
+    <div class="container">
+    <!-- class="container slds-brand-band slds-brand-band_cover slds-brand-band_medium" LIST VIEW OPTION -->
+        <!-- LIST VIEW OPTION
         <lightning:listView
         	aura:id="listViewStacks"
             objectApiName="Stack__c"
@@ -14,6 +18,7 @@
             enableInlineEdit="true"
             showRowLevelActions="false"
         />
+		-->
         <div class="slds-m-around--xx-large">
             <!--Modal Box Start-->
             <div role="dialog" class="slds-modal slds-fade-in-open ">
@@ -27,35 +32,56 @@
                     <!--Main Content Start-->
                     <div class="slds-modal__content slds-p-around--medium">
                         <!--<lightning:flow aura:id="flowData" />-->
-                        <lightning:recordForm
-                        	objectApiName="Stack__c"
-                            recordTypeId="{!v.recordTypeId}"
-                            columns="2"
-                            fields="{!v.fieldNames}"
-                            mode="edit"
-                            oncancel="{!c.handleCloseModal}"/>
+                        <lightning:recordEditForm aura:id="recordEditForm"
+                                                  objectApiName="Stack__c"
+                                                  recordTypeId="{!v.recordTypeId}"
+                                                  onsuccess="{!c.handleSuccess}">
+                            <lightning:messages />
+                            <aura:iteration items="{!v.sections}" var="section" >
+                                <h3 class="slds-section__title slds-theme_shade">
+                                    <span class="slds-truncate slds-p-horizontal_small" title="Section Title">{!section.sectionName}</span>
+                                </h3>
+                                <div class="slds-grid">
+                                    <div class="slds-col">
+                                    <aura:iteration items="{!section.leftColumn}" var="field" >
+                                        <lightning:layoutItem class="slds-m-bottom_medium" size="12" padding="horizontal-small">
+                                            <lightning:inputField aura:id="field" class="{!field.fieldName}" required="{!field.isRequired}" fieldName="{!field.fieldName}"/>
+                                        </lightning:layoutItem>
+                                    </aura:iteration>
+                                    </div>
+                                    <div class="slds-col">
+                                	<aura:iteration items="{!section.rightColumn}" var="field" >
+                                        <lightning:layoutItem class="slds-m-bottom_medium" size="12" padding="horizontal-small">
+                                            <lightning:inputField aura:id="field" class="{!field.fieldName}" required="{!field.isRequired}" fieldName="{!field.fieldName}"/>
+                                        </lightning:layoutItem>
+                                    </aura:iteration>
+                                    </div>
+                                </div>
+                            </aura:iteration>
+                        </lightning:recordEditForm>
                     </div>
                     <!--Main Content End-->
-                    <!--
                     <div class="slds-modal__footer">
-                        <button class="slds-button slds-button-*REMOVEME*-brand" onclick="{!c.handleCloseModal}">Cancel</button>
+                        <div class="slds-align_absolute-center">
+                        	<button class="slds-button slds-button--neutral" onclick="{!c.handleCloseModal}">Cancel</button>
+                        	<button class="slds-button slds-button--brand" onclick="{!c.handleSave}">Save</button>
+                        </div>
                     </div>
-					-->
                 </div>
             </div>
             <div class="slds-backdrop slds-backdrop--open"></div>
         </div>
     </div>
-    <!--  this tag sets modal width -->
+    <!-- This tag sets modal width -->
     <aura:html tag="style">
         .slds-modal__container {
         	min-width: 38%;
         }
-        
+        /* LIST VIEW OPTION
         .slds-template_default {
         	padding: 0rem;
         }
-        
+        */
         .container {
         	padding: 1rem;
         }
